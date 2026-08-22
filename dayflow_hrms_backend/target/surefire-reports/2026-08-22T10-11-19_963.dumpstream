@@ -1,0 +1,5 @@
+# Created at 2026-08-22T10:11:21.747
+Boot Manifest-JAR contains absolute paths in classpath 'D:\projects\Dayflow_odoo\dayflow_hrms_backend\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
