@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.dayflow.hrms.DayflowHrmsApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.44 s -- in com.dayflow.hrms.DayflowHrmsApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 20.80 s -- in com.dayflow.hrms.DayflowHrmsApplicationTests
