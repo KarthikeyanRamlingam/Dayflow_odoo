@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, Shield, UserCheck, User, ArrowRight } from 'lucide-react';
 import { authApi } from '../api/authApi';
+import { API_BASE_URL } from '../api/client';
 import type { Role } from '../types/hrms';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -36,7 +37,13 @@ export function AuthPage({ onSuccess }: AuthPageProps) {
       const res = await authApi.login({ username: loginUser.trim(), password: loginPass });
       onSuccess(res.token, res.role, res.username, res.fullName);
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Invalid credentials. Please check your username and password.');
+      if (err?.response?.data?.message) {
+        setError(err.response.data.message);
+      } else if (err?.response?.status === 401 || err?.response?.status === 403) {
+        setError('Invalid username or password.');
+      } else {
+        setError(`Cannot reach backend at ${API_BASE_URL}. If your backend service is starting up, please wait ~30 seconds and retry.`);
+      }
     } finally {
       setLoading(false);
     }
@@ -59,7 +66,13 @@ export function AuthPage({ onSuccess }: AuthPageProps) {
       });
       onSuccess(res.token, res.role, res.username, res.fullName);
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Registration failed. The username or email might already be taken.');
+      if (err?.response?.data?.message) {
+        setError(err.response.data.message);
+      } else if (err?.response?.status === 400 || err?.response?.status === 409) {
+        setError('Registration failed: Username or email might already be taken.');
+      } else {
+        setError(`Cannot reach backend at ${API_BASE_URL}. If your backend service is starting up, please wait ~30 seconds and retry.`);
+      }
     } finally {
       setLoading(false);
     }
