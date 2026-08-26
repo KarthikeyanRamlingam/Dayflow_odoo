@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
@@ -24,19 +25,23 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final EmailService emailService;
 
     public AuthService(AppUserRepository appUserRepository,
                        EmployeeRepository employeeRepository,
                        PasswordEncoder passwordEncoder,
                        AuthenticationManager authenticationManager,
-                       JwtService jwtService) {
+                       JwtService jwtService,
+                       EmailService emailService) {
         this.appUserRepository = appUserRepository;
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.emailService = emailService;
     }
 
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (appUserRepository.existsByUsername(request.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
@@ -45,44 +50,77 @@ public class AuthService {
             throw new IllegalArgumentException("Email already exists");
         }
 
+        Role assignedRole = request.getRole() != null ? request.getRole() : Role.EMPLOYEE;
+
         AppUser user = new AppUser(
                 request.getUsername(),
                 request.getEmail(),
                 passwordEncoder.encode(request.getPassword()),
-                request.getRole() == null ? Role.EMPLOYEE : request.getRole()
+                assignedRole
         );
-
+        user.setEmailVerified(true);
         AppUser savedUser = appUserRepository.save(user);
 
+        String empCode = "DF-" + (1000 + savedUser.getId());
         Employee employee = new Employee(
-                "DF-" + savedUser.getId(),
-                "New",
+                empCode,
                 savedUser.getUsername(),
+                "",
                 savedUser.getEmail(),
                 savedUser
         );
-        employeeRepository.save(employee);
+        employee.setDepartment(assignedRole == Role.EMPLOYEE ? "Engineering" : "Human Resources");
+        employee.setJobTitle(assignedRole == Role.EMPLOYEE ? "Associate Engineer" : "HR Specialist");
+        Employee savedEmp = employeeRepository.save(employee);
+
+        emailService.sendWelcomeNotification(savedUser.getEmail(), savedUser.getUsername(), empCode);
 
         String token = jwtService.generateToken(savedUser);
-        return new AuthResponse(token, savedUser.getUsername(), savedUser.getRole().name());
+        return new AuthResponse(
+                token,
+                savedUser.getUsername(),
+                savedUser.getEmail(),
+                savedUser.getRole().name(),
+                savedEmp.getId(),
+                savedEmp.getFirstName() + (savedEmp.getLastName().isBlank() ? "" : " " + savedEmp.getLastName())
+        );
     }
 
     public AuthResponse login(LoginRequest request) {
         try {
+            // Check if username passed is actually an email
+            String actualUsername = request.getUsername();
+            if (request.getUsername().contains("@")) {
+                var userOpt = appUserRepository.findByEmail(request.getUsername());
+                if (userOpt.isPresent()) {
+                    actualUsername = userOpt.get().getUsername();
+                }
+            }
+
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                    new UsernamePasswordAuthenticationToken(actualUsername, request.getPassword())
             );
 
             if (!authentication.isAuthenticated()) {
-                throw new AuthenticationException("Authentication failed") {
-                };
+                throw new AuthenticationException("Authentication failed") {};
             }
 
-            AppUser user = appUserRepository.findByUsername(request.getUsername())
+            AppUser user = appUserRepository.findByUsername(actualUsername)
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
+            Employee emp = employeeRepository.findByUserUsername(user.getUsername()).orElse(null);
+            Long empId = emp != null ? emp.getId() : null;
+            String fullName = emp != null ? (emp.getFirstName() + " " + emp.getLastName()).trim() : user.getUsername();
+
             String token = jwtService.generateToken(user);
-            return new AuthResponse(token, user.getUsername(), user.getRole().name());
+            return new AuthResponse(
+                    token,
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getRole().name(),
+                    empId,
+                    fullName
+            );
         } catch (AuthenticationException e) {
             throw new IllegalArgumentException("Invalid username or password", e);
         }

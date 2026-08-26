@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,12 +24,19 @@ public class Attendance {
     private Employee employee;
 
     @Column(nullable = false)
+    private LocalDate attendanceDate = LocalDate.now();
+
+    @Column(nullable = false)
     private LocalDateTime checkIn;
 
     private LocalDateTime checkOut;
 
+    private Long durationMinutes;
+
     @Column(nullable = false)
     private String status = "PRESENT";
+
+    private String notes;
 
     public Attendance() {
     }
@@ -38,6 +46,9 @@ public class Attendance {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.status = status;
+        if (checkIn != null) {
+            this.attendanceDate = checkIn.toLocalDate();
+        }
     }
 
     public Long getId() {
@@ -56,12 +67,23 @@ public class Attendance {
         this.employee = employee;
     }
 
+    public LocalDate getAttendanceDate() {
+        return attendanceDate;
+    }
+
+    public void setAttendanceDate(LocalDate attendanceDate) {
+        this.attendanceDate = attendanceDate;
+    }
+
     public LocalDateTime getCheckIn() {
         return checkIn;
     }
 
     public void setCheckIn(LocalDateTime checkIn) {
         this.checkIn = checkIn;
+        if (checkIn != null) {
+            this.attendanceDate = checkIn.toLocalDate();
+        }
     }
 
     public LocalDateTime getCheckOut() {
@@ -72,11 +94,27 @@ public class Attendance {
         this.checkOut = checkOut;
     }
 
+    public Long getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public void setDurationMinutes(Long durationMinutes) {
+        this.durationMinutes = durationMinutes;
+    }
+
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

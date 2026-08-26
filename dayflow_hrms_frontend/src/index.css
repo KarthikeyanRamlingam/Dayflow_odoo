@@ -1,43 +1,44 @@
-:root {
-  font-family: Inter, 'Segoe UI', sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: #111827;
-  background: #f3f4f6;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-brand-600 selection:text-white min-h-screen;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.04) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.04) 0px, transparent 50%);
+    background-attachment: fixed;
+  }
 }
 
-* {
-  box-sizing: border-box;
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-html {
-  scroll-behavior: smooth;
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background: #f3f4f6;
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
 }
 
-button,
-input,
-textarea,
-select {
-  font: inherit;
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
-#root {
-  min-height: 100vh;
-}
-
-h1,
-h2,
-p {
-  margin-top: 0;
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/95 backdrop-blur-xl border border-slate-200/80 rounded-2xl shadow-card;
+  }
+  
+  .glass-card {
+    @apply bg-white border border-slate-200/80 rounded-xl transition-all duration-200 hover:border-slate-300 hover:shadow-card-hover;
+  }
 }

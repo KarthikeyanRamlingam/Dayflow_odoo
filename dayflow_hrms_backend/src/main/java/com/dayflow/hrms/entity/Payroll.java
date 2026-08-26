@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "payrolls")
@@ -23,14 +24,18 @@ public class Payroll {
     private Employee employee;
 
     @Column(nullable = false)
-    private BigDecimal basicSalary;
+    private BigDecimal basicSalary = BigDecimal.ZERO;
 
     private BigDecimal allowances = BigDecimal.ZERO;
     private BigDecimal deductions = BigDecimal.ZERO;
     private BigDecimal netSalary = BigDecimal.ZERO;
 
-    @Column(name = "payroll_month")
+    @Column(name = "payroll_month", nullable = false)
     private String payrollMonth;
+
+    private String paymentStatus = "PAID";
+    private LocalDate paymentDate = LocalDate.now();
+    private String remarks;
 
     public Payroll() {
     }
@@ -89,5 +94,29 @@ public class Payroll {
 
     public void setPayrollMonth(String payrollMonth) {
         this.payrollMonth = payrollMonth;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public LocalDate getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(LocalDate paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 }

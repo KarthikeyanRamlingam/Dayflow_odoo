@@ -1,5 +1,6 @@
 package com.dayflow.hrms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,11 +9,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.security.Principal;
 import java.time.Instant;
 
 @Entity
 @Table(name = "app_users")
-public class AppUser {
+public class AppUser implements Principal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +63,11 @@ public class AppUser {
         this.username = username;
     }
 
+    @Override
+    public String getName() {
+        return username;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -69,6 +76,7 @@ public class AppUser {
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -107,5 +115,10 @@ public class AppUser {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return username;
     }
 }

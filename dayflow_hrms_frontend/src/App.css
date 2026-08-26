@@ -19,6 +19,11 @@
 }
 
 .nav-item {
+  border: 0;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
   display: block;
   padding: 12px 14px;
   margin: 8px 0;
@@ -68,6 +73,20 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+.secondary-button { border: 1px solid #c7d2fe; border-radius: 10px; background: white; color: #3730a3; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+.sidebar-user { margin-top: 38px; padding: 12px 14px; color: #e0e7ff; border-top: 1px solid rgba(255,255,255,.12); }
+.sidebar-user small, .brand small { color: #94a3b8; font-size: .72rem; }
+.full-width { grid-column: 1 / -1; }
+.action-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: .9rem; white-space: nowrap; }
+th { color: #64748b; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; }
+td button { border: 0; border-radius: 6px; padding: 6px 8px; cursor: pointer; }
+.leave-form { display: flex; flex-direction: column; gap: 12px; }
+.leave-form label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; color: #374151; }
+.leave-form input, .leave-form select, .leave-form textarea { border: 1px solid #d1d5db; border-radius: 8px; padding: 10px; }
 
 .stats-grid {
   display: grid;

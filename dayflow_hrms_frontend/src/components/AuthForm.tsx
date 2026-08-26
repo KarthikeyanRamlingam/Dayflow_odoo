@@ -114,17 +114,7 @@ export function AuthForm({ mode, onSuccess }: AuthFormProps) {
               placeholder="create password"
             />
           </label>
-          <label>
-            Role
-            <select
-              value={registerForm.role}
-              onChange={(e) => setRegisterForm({ ...registerForm, role: e.target.value as AuthRole })}
-            >
-              <option value="EMPLOYEE">Employee</option>
-              <option value="HR_MANAGER">HR Manager</option>
-              <option value="ADMIN">Admin</option>
-            </select>
-          </label>
+          <p className="muted">New accounts are created as employees. HR roles are assigned by an administrator.</p>
           {error && <p className="error-text">{error}</p>}
           <button type="submit" disabled={loading}>{loading ? 'Creating account...' : 'Register'}</button>
         </form>

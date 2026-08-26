@@ -1,5 +1,8 @@
 package com.dayflow.hrms.dto;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 public class EmployeeDto {
     private Long id;
     private String employeeCode;
@@ -7,10 +10,17 @@ public class EmployeeDto {
     private String lastName;
     private String email;
     private String phone;
+    private String address;
+    private String emergencyContact;
     private String department;
     private String jobTitle;
+    private String employmentType;
     private String status;
+    private LocalDate dateOfJoining;
+    private LocalDate dateOfBirth;
+    private BigDecimal baseSalary;
     private String profilePhotoUrl;
+    private String role;
 
     public EmployeeDto() {
     }
@@ -63,6 +73,22 @@ public class EmployeeDto {
         this.phone = phone;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getEmergencyContact() {
+        return emergencyContact;
+    }
+
+    public void setEmergencyContact(String emergencyContact) {
+        this.emergencyContact = emergencyContact;
+    }
+
     public String getDepartment() {
         return department;
     }
@@ -79,6 +105,14 @@ public class EmployeeDto {
         this.jobTitle = jobTitle;
     }
 
+    public String getEmploymentType() {
+        return employmentType;
+    }
+
+    public void setEmploymentType(String employmentType) {
+        this.employmentType = employmentType;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -87,11 +121,43 @@ public class EmployeeDto {
         this.status = status;
     }
 
+    public LocalDate getDateOfJoining() {
+        return dateOfJoining;
+    }
+
+    public void setDateOfJoining(LocalDate dateOfJoining) {
+        this.dateOfJoining = dateOfJoining;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public BigDecimal getBaseSalary() {
+        return baseSalary;
+    }
+
+    public void setBaseSalary(BigDecimal baseSalary) {
+        this.baseSalary = baseSalary;
+    }
+
     public String getProfilePhotoUrl() {
         return profilePhotoUrl;
     }
 
     public void setProfilePhotoUrl(String profilePhotoUrl) {
         this.profilePhotoUrl = profilePhotoUrl;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

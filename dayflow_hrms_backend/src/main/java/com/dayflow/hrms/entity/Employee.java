@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -18,7 +19,7 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String employeeCode;
 
     @Column(nullable = false)
@@ -31,10 +32,15 @@ public class Employee {
     private String email;
 
     private String phone;
-    private String department;
-    private String jobTitle;
+    private String address;
+    private String emergencyContact;
+    private String department = "Engineering";
+    private String jobTitle = "Software Engineer";
+    private String employmentType = "Full-time";
     private String status = "ACTIVE";
-    private LocalDate dateOfJoining;
+    private LocalDate dateOfJoining = LocalDate.now();
+    private LocalDate dateOfBirth;
+    private BigDecimal baseSalary = BigDecimal.valueOf(60000);
     private String profilePhotoUrl;
 
     @OneToOne
@@ -100,6 +106,22 @@ public class Employee {
         this.phone = phone;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getEmergencyContact() {
+        return emergencyContact;
+    }
+
+    public void setEmergencyContact(String emergencyContact) {
+        this.emergencyContact = emergencyContact;
+    }
+
     public String getDepartment() {
         return department;
     }
@@ -116,6 +138,14 @@ public class Employee {
         this.jobTitle = jobTitle;
     }
 
+    public String getEmploymentType() {
+        return employmentType;
+    }
+
+    public void setEmploymentType(String employmentType) {
+        this.employmentType = employmentType;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -130,6 +160,22 @@ public class Employee {
 
     public void setDateOfJoining(LocalDate dateOfJoining) {
         this.dateOfJoining = dateOfJoining;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public BigDecimal getBaseSalary() {
+        return baseSalary;
+    }
+
+    public void setBaseSalary(BigDecimal baseSalary) {
+        this.baseSalary = baseSalary;
     }
 
     public String getProfilePhotoUrl() {

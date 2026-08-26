@@ -1,32 +1,29 @@
-import axios from 'axios';
-import type { Employee } from '../types/employee';
-
-const API_BASE_URL = 'http://localhost:8080/api';
-
-function getAuthHeader() {
-  const token = localStorage.getItem('dayflow_token');
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
+import { apiClient } from './client';
+import type { UserProfile } from '../types/hrms';
 
 export const employeeApi = {
-  list: async (): Promise<Employee[]> => {
-    const { data } = await axios.get<Employee[]>(`${API_BASE_URL}/employees`, {
-      headers: getAuthHeader(),
-    });
+  list: async (search?: string): Promise<UserProfile[]> => {
+    const params = search ? { search } : {};
+    const { data } = await apiClient.get<UserProfile[]>('/employees', { params });
     return data;
   },
 
-  getById: async (id: number): Promise<Employee> => {
-    const { data } = await axios.get<Employee>(`${API_BASE_URL}/employees/${id}`, {
-      headers: getAuthHeader(),
-    });
+  getById: async (id: number): Promise<UserProfile> => {
+    const { data } = await apiClient.get<UserProfile>(`/employees/${id}`);
     return data;
   },
 
-  update: async (id: number, payload: Partial<Employee>): Promise<Employee> => {
-    const { data } = await axios.put<Employee>(`${API_BASE_URL}/employees/${id}`, payload, {
-      headers: getAuthHeader(),
-    });
+  create: async (payload: Partial<UserProfile>): Promise<UserProfile> => {
+    const { data } = await apiClient.post<UserProfile>('/employees', payload);
     return data;
+  },
+
+  update: async (id: number, payload: Partial<UserProfile>): Promise<UserProfile> => {
+    const { data } = await apiClient.put<UserProfile>(`/employees/${id}`, payload);
+    return data;
+  },
+
+  delete: async (id: number): Promise<void> => {
+    await apiClient.delete(`/employees/${id}`);
   },
 };

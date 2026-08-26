@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dayflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: dayflow
+      POSTGRES_USER: dayflow
+      POSTGRES_PASSWORD: dayflow_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - dayflow-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dayflow -d dayflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./dayflow_hrms_backend
+      dockerfile: Dockerfile
+    container_name: dayflow-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DAYFLOW_DB_URL: jdbc:postgresql://postgres:5432/dayflow
+      DAYFLOW_DB_USERNAME: dayflow
+      DAYFLOW_DB_PASSWORD: dayflow_dev_password
+      DAYFLOW_DB_DRIVER: org.postgresql.Driver
+      DAYFLOW_JPA_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      JWT_SECRET: dayflow-super-secret-key-for-local-dev-change-me-dayflow-hrms-key-at-least-256-bits
+      DAYFLOW_ADMIN_USERNAME: admin
+      DAYFLOW_ADMIN_PASSWORD: dayflow123
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./dayflow_hrms_frontend
+      dockerfile: Dockerfile
+    container_name: dayflow-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    environment:
+      VITE_API_URL: http://localhost:8080/api
+    depends_on:
+      - backend
+
+volumes:
+  dayflow-postgres-data:
