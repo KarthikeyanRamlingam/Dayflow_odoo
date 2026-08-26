@@ -89,6 +89,6 @@ export interface AppNotification {
   timestamp: string;
   type: 'leave' | 'attendance' | 'payroll' | 'employee' | 'system';
   read: boolean;
-  actionTab?: 'overview' | 'employees' | 'attendance' | 'leave' | 'payroll' | 'profile';
+  actionTab?: 'overview' | 'employees' | 'attendance' | 'leaves' | 'payroll' | 'profile';
 }
 
